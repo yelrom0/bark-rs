@@ -1,11 +1,19 @@
 [package]
-name = "bark-rs"
-version = "0.1.0"
+name = "bark_rs"
+version = "0.0.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-name = "bark-rs"
+name = "bark_rs"
 crate-type = ["bin", "lib"]
 
 [dependencies]
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
+    "cuda",
+    "cudarc",
+    "accelerate",
+    "cudnn",
+    "mkl",
+] }
+pyo3 = "0.19.0"
