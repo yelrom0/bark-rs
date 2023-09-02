@@ -1,42 +1,7 @@
-[package]
-name = "bark_rs"
+[workspace]
 version = "0.0.1"
 edition = "2021"
 authors = ["yelrom0 <yelrom0@gmail.com>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[lib]
-name = "bark_rs_lib"
-path = "src/lib.rs"
-
-[[bin]]
-name = "bark_rs_bin"
-path = "src/main.rs"
-
-# The candle dependency needs to be split into each architecture
-# As each graphics accelaration library is unique to the platforms
-
-# x86_64 uses mkl
-[target.'cfg(target_arch = "x86_64")'.dependencies]
-candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
-    "mkl",
-] }
-
-# macos uses accelerate
-[target.'cfg(target_os = "macos")'.dependencies]
-candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
-    "accelerate",
-] }
-
-# nvidia gpus use cuda
-[target.'cfg(target_vendor = "nvidia")'.dependencies]
-candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
-    "cuda",
-    "cudarc",
-    "cudnn",
-] }
-
-# TODO: add WASM for web on other platforms
-
-[dependencies]
-pyo3 = "0.19.0"
+members = ["bark_rs", "bark_rs_model"]
+default-features = false
