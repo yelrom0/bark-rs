@@ -3,5 +3,47 @@ version = "0.0.1"
 edition = "2021"
 authors = ["yelrom0 <yelrom0@gmail.com>"]
 
-members = ["bark_rs", "bark_rs_model"]
-default-features = false
+# define sub packages
+members = ["bark_rs_model"]
+
+# This workspace is also used as the base package
+# as targeted dependancies don't work in sub-packages
+# as of 1.72.0 2023-08-15
+[package]
+name = "bark_rs"
+version = "0.0.2"
+edition = "2021"
+
+[lib]
+name = "bark_rs_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bark_rs_bin"
+path = "src/main.rs"
+
+# TODO: add WASM for web on other platforms
+# The candle dependency needs to be split into each architecture
+# As each graphics accelaration library is unique to the platforms
+# x86_64 uses mkl
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
+    "mkl",
+] }
+
+# macos uses accelerate
+[target.'cfg(target_os = "macos")'.dependencies]
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
+    "accelerate",
+] }
+
+# nvidia gpus use cuda
+[target.'cfg(target_vendor = "nvidia")'.dependencies]
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.2.1", features = [
+    "cuda",
+    "cudarc",
+    "cudnn",
+] }
+
+[dependencies]
+pyo3 = "0.19.0"
